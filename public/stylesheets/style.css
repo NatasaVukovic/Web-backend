@@ -1,0 +1,62 @@
+
+.review {padding-bottom: 5px;}
+.panel-body.review-container {padding-top: 0;}
+.review-header {margin-bottom: 10px;}
+.reviewAuthor {margin: 0 5px;}
+.reviewTimestemp {color: #ccc;}
+#filter {margin-left: 4px;}
+
+body {
+    font-family: 'Handlee';
+    font-size: 22px;
+}
+
+.navbar-brand {
+    float: left;
+    height: 50px;
+    padding: 40px 10px;
+    padding-top: 40px;
+    font-size: 50px;
+    line-height: 20px;
+}
+
+#navbar-main{
+    padding-top: 25px;
+}
+
+.home{
+    background-image: url("../images/ny.jpg");
+    min-height: 100%;
+   background-position: center;
+    background-size: auto;
+
+}
+
+.hometext {
+    font-size: 50%;
+    color: white;
+    padding-top: 50px;
+}
+
+#home{
+    font-size: 50px;
+
+}
+/*
+body,html{
+    height: 100%;
+    color: #777;
+    line-height: 1.8;
+}
+
+.bgimg {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bgimg {
+  //  background-image: ;
+    min-height: 400px;
+}*/

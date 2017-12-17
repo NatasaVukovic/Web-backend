@@ -1,0 +1,59 @@
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
+var mongoose = require('mongoose');
+var User=mongoose.model('User');
+var secret=require('../../secret/secret');
+
+/*
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+        done(err, user);
+    });
+});*/
+
+passport.use(new LocalStrategy({usernameField: 'name', passwordField : 'password',}, function (name, password, done) {
+        User.findOne({'name': name}, function (err, user) {
+            if(err) {
+                return done(err);
+            }
+            if(!user){
+                return done(null, false, {message: 'Incorrect email'});
+            }
+            if(!user.validPassword(password)){
+                return done(null, false,{message: 'Incorrect password'});
+            }
+            return done(null, user);
+        })
+    }
+));
+
+passport.use(new FacebookStrategy(secret.facebook, function(accessToken, refreshToken, profile, done) {
+    User.findOne({facebookId: profile.id}, function (err, user) {
+        if (err) {
+            return done(err);
+        }
+        if (user) {
+            done(null, user);
+        } else {
+            var newUser = new User();
+            newUser.facebook = profile.id;
+            newUser.name = profile.displayName;
+            newUser.email = profile.emails[0].value;
+            newUser.accessToken=profile.accessToken;
+            // newUser.tokens.push({token:accesToken});
+
+            newUser.save(function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    done(null, newUser);
+                }
+            });
+        };
+    })
+}));
