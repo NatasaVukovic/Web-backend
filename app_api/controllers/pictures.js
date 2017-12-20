@@ -1,15 +1,16 @@
 var mongoose=require('mongoose');
 var cityM=mongoose.model('City');
 var express=require('express');
-var router=express.Router();
-var multer=require('multer');
+//var router=express.Router();
+var multer  = require('multer');
+//var upload = multer({ dest: 'uploads/' });
 
 var sendJsonResponse=function(res,status,content){
     res.status(status);
     res.json(content);
 };
-
-/*var storage = multer.diskStorage({
+/*
+var storage = multer.diskStorage({
     destination: './uploads/',
     filename: function (req, file, cb) {
         crypto.pseudoRandomBytes(16, function (err, raw) {
@@ -19,20 +20,21 @@ var sendJsonResponse=function(res,status,content){
         })
     }
 })*/
-//var upload = multer({ storage: storage }).single('myFile');
-//var upload = multer({ dest: 'uploads/' }).single('myFile');
+
 
 var storage = multer.diskStorage({
     destination: function(req, file, callback) {
-        callback(null, './uploads')
+        console.log('dir');
+        callback(null, './uploads/')
     },
     filename: function(req, file, callback) {
         console.log(file);
         callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
     }
 });
-
-var upload = multer({
+var upload = function(req,res,callback){
+    console.log('upload');
+    multer({
     storage: storage,
     fileFilter: function(req, file, callback) {
         var ext = path.extname(file.originalname);
@@ -41,20 +43,19 @@ var upload = multer({
         }
         callback(null, true)
     }
-}).single('photo');
-
-
+}).single('photo')};
 
 module.exports.uploadPhoto=function (req, res) {
+    console.log(req.files.photo);
     upload(req,res ,function(err) {
         if (err) {
             sendJsonResponse(res, 400, {'message': 'Error'});
         }
-        console.log(req.file);
-            //console.log(req.file.originalname);
+            console.log(req.files);
             sendJsonResponse(res, 200, {'message': 'Uploaded!'});
 
-    })}
+    })
+}
 /*
 
     if(req.params && req.params.cityid){
@@ -91,6 +92,30 @@ module.exports.uploadPhoto=function (req, res) {
             sendJsonResponse(res, 404, {"message": "Cityid not found"});
         }
 })};*/
+
+
+var uploadPhotos = multer({
+    storage: storage,
+    fileFilter: function(req, file, callback) {
+        var ext = path.extname(file.originalname);
+        if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+            return callback(res.end('Only images are allowed'), null)
+        }
+        callback(null, true)
+    }
+}).array('photoList', 12);
+
+module.exports.uploadPhotoList=function(req,res){
+    uploadPhotos(req, res, function (err) {
+        if(err){
+            sendJsonResponse(res, 400, {'message' : 'Error while uploading photo'});
+        }
+        sendJsonResponse(res, 200, {'message': 'Photos uploaded'});
+    })
+};
+
+
+
 
 module.exports.photosList=function (req, res) {
     if(req.params && req.params.cityid){

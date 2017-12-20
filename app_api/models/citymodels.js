@@ -14,9 +14,9 @@ var placesSchema=new mongoose.Schema({
     place: {type: String, required: true},
     lat: {type: String},
     lng: {type: String},
-    distance: {type: Number},
-    likes : {type: Number},
-    author: {type: String}
+    likes : {type: Number, default: 0},
+    author: {type: String, required: true},
+    description: {type: String}
 });
 
 var picturesSchema=new mongoose.Schema({
@@ -35,11 +35,12 @@ var citySchema=new mongoose.Schema({
   lat: {type: String, required: true},
   lng: {type: String, required: true},
   information: {type: String},
-  places: [{type: Schema.ObjectId, ref:"Place"}],
+  places: [placesSchema],
   rating: {type: Number, "default": 0, min:0, max:5},
   reviews: [reviewSchema],
-  pictures: [picturesSchema]
+  pictures: [picturesSchema],
+    distance: {type: Number, default:0}
 });
 
 mongoose.model('City', citySchema);
-mongoose.model('Place', placesSchema);
+//mongoose.model('Place', placesSchema);

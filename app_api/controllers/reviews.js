@@ -11,7 +11,7 @@ var sendJsonResponse=function(res,status,content){
 module.exports.use = function(req, res,next){
     jwt.verify(req.query.token, process.env.JWT_SECRET, function (err, decoded) {
         if (err) {
-            return res.status(401).json({
+            return res.status(403).json({
                 title: 'Not Authenticated',
                 error: err
             });
@@ -120,6 +120,29 @@ module.exports.reviewsCreate=function(req,res){
     });
 };
 
+module.exports.reviewsReadAll=function(req,res){
+    if(req.params && req.params.cityid){
+        cityM
+            .findById(req.params.cityid)
+            .select('name reviews')
+            .exec(function (err, city) {
+                if(!city){
+                    sendJsonResponse(res, 404, {'message': 'Cityid not found'});
+                    return;
+                } else if (err) {
+                    sendJsonResponse(res, 404, err);
+                    return;
+                }
+                if (city.reviews && city.reviews.length > 0) {
+
+                        sendJsonResponse(res, 200, city.reviews);
+                    }
+            });
+    } else {
+        sendJsonResponse(res, 404, {'message': 'Not found, cityid and reviewid are both required!'});
+    }
+};
+
 module.exports.reviewsReadOne=function(req,res){
         if (req.params && req.params.cityid && req.params.reviewid) {
             cityM
@@ -171,17 +194,18 @@ module.exports.reviewsUpdateOne=function(req,res){
                     } else {
                         if (city.reviews && city.reviews.length > 0) {
 
+                            console.log(user.name);
                             var thisReview = city.reviews.id(req.params.reviewid);
-                            if(!(user._id == thisReview._id)){
-                                sendJsonResponse(res, 500, {"message" : "You are not authorised to update this review"});
-                                return;
-                            } 
+                            console.log(thisReview.author);
                             if (!thisReview) {
                                 sendJsonResponse(res, 404, {'message': 'Reviewid not found!'});
                                 return;
                             }
+                            if(!(user.name == thisReview.author)){
+                                sendJsonResponse(res, 500, {"message" : "You are not authorised to update this review"});
+                                return;
+                            }
                             thisReview.rating = req.body.rating;
-                            thisReview.author = req.body.author;
                             thisReview.reviewText = req.body.reviewText;
                             city.save(function (err, city) {
                                 if (err) {
@@ -220,7 +244,7 @@ module.exports.reviewsDeleteOne=function(req,res){
                     }
                     if (city.reviews && city.reviews.length > 0) {
                         thisReview=city.reviews.id(req.params.reviewid);
-                        if(!(user._id == thisReview._id)){
+                        if(!(user.name== thisReview.author) && !user.admin){
                             sendJsonResponse(res, 500, {"message" : "You are not authorised to delete this review"});
                             return;
                         }
@@ -235,7 +259,7 @@ module.exports.reviewsDeleteOne=function(req,res){
                                     sendJsonResponse(res, 404, err);
                                 } else {
                                     updateAverageRating(city._id);
-                                    sendJsonResponse(res, 200, null);
+                                    sendJsonResponse(res, 200, {'message' : 'Deleted!'});
                                 }
 
                             })

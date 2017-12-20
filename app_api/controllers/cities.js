@@ -11,16 +11,17 @@ var sendJsonResponse=function(res,status,content){
 module.exports.use = function(req, res,next){
     jwt.verify(req.query.token, process.env.JWT_SECRET, function (err, decoded) {
         if (err) {
-            return res.status(401).json({
+            return res.status(403).json({
                 title: 'Not Authenticated',
                 error: err
             });
         }
+        console.log('heeeeeeeeeee');
         next();
     });
-}
 
-/*
+};
+
 var theEarth = (function () {
     var earthRadius = 6371; //km, miles is 3959
 
@@ -38,6 +39,25 @@ var theEarth = (function () {
     };
 })();
 
+function degreesToRadians(degrees) {
+    return degrees * Math.PI / 180;
+}
+
+function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+    var earthRadiusKm = 6371;
+
+    var dLat = degreesToRadians(lat2-lat1);
+    var dLon = degreesToRadians(lon2-lon1);
+
+    lat1 = degreesToRadians(lat1);
+    lat2 = degreesToRadians(lat2);
+
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return earthRadiusKm * c;
+}
+
 module.exports.citiesListByDistance=function(req,res){
     var lng = parseFloat(req.query.lng);
     var lat = parseFloat(req.query.lat);
@@ -46,9 +66,9 @@ module.exports.citiesListByDistance=function(req,res){
         coordinates: [lng, lat]
     };
     var geoOptions = {
-        spherical : true,
-        maxDistance: theEarth.getRadsFromDistance(20),
-        num: 10
+        spherical : true
+        //maxDistance: theEarth.getRadsFromDistance(2000000000000000000),
+//        num: 10
     };
 
     if(!lng || !lat) {
@@ -56,18 +76,45 @@ module.exports.citiesListByDistance=function(req,res){
         return;
     }
 
+        cityM
+            .find({})
+            .select('distance lat lng')
+            .exec(function (err, city) {
+               // console.log(city);
+                for(i=0;i<city.length;i++){
+                if (err) {
+                    sendJsonResponse(res, 400, err);
+                }
+                console.log(i + city[i]);
+                //console.log(city[i].distance);
+                if (city[i]) {
+                 //   console.log(city[i].distance);
+                    //console.log(city[i].lng);
+                    //console.log(city[i].lat);
+                    city[i].distance=distanceInKmBetweenEarthCoordinates(lat, lng, city[i][lat], city[i][lng])
+
+                }
+
+                }
+            }
+
+            );
+
+
+    distance=distanceInKmBetweenEarthCoordinates(lat, lng, 17.8, 78.5);
+    console.log(distance);
+
     cityM.geoNear(point, geoOptions, function (err, results, stats) {
+        console.log(results);
         var cities = [];
         if(err){
             sendJsonResponse(res, 404, err);
-        } /*else if(results.equals(null))
-        {
-            sendJsonResponse(res,200,{'message':'No exist near city'});
-        }//
+        }
    else {
                 results.forEach(function(doc){
+                    console.log(doc);
                     cities.push({
-                        distance: theEarth.getDistanceFromRads(doc.distance),
+                        distance: theEarth.getDistanceFromRads(doc.distance), /*distanceInKmBetweenEarthCoordinates(lat, lng, 17.8, 78.5),*/
                         name: doc.obj.name,
                         country: doc.obj.country,
                         rating: doc.obj.rating,
@@ -76,10 +123,9 @@ module.exports.citiesListByDistance=function(req,res){
                 });
                 sendJsonResponse(res, 200, cities);
             }
-        //}
     });
 
-};*/
+};
 
 
 module.exports.citiesCreate=function(req,res){

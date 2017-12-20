@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo upload</title>
+</head>
+<body>
+    <form enctype="multipart/form-data" action="http://localhost:3000/api/cities/59a1ad355d3c6129dd081099/photo?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1YTM3MGUwOGI1NzJkYzJhMzg4MDQ2MzYiLCJlbWFpbCI6ImplbGVuYWFAZ21haWwuY29tIiwibmFtZSI6IkplbGVuYU1lZGFyZXZpYyIsImV4cCI6MTUxNDE2MjMxMiwiaWF0IjoxNTEzNTU3NTEyfQ.t-ZwivAki7WF8R6skUEMbeoH-GVjxVhq6w6ebX3VPQI" method="post">
+        <input type="file" name="photo">
+        <button type="submit" value="Submit">Send</button>
+    </form>
+</body>
+</html>
