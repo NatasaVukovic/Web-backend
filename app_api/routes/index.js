@@ -49,6 +49,7 @@ router.get('/logout', ctrlAuth.logout);
 
 
 //pictures
+//router.use('/cities/:cityid/photo', ctrlPhoto.use);
 router.post('/cities/:cityid/photo', ctrlPhoto.uploadPhoto);
 router.post('/cities/:cityid/photoList', ctrlPhoto.uploadPhotoList);
 router.get('/cities/:cityid/pictures', ctrlPhoto.photosList);

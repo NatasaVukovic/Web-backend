@@ -86,25 +86,21 @@ module.exports.citiesListByDistance=function(req,res){
                     sendJsonResponse(res, 400, err);
                 }
                 console.log(i + city[i]);
-                //console.log(city[i].distance);
-                if (city[i]) {
-                 //   console.log(city[i].distance);
-                    //console.log(city[i].lng);
-                    //console.log(city[i].lat);
-                    city[i].distance=distanceInKmBetweenEarthCoordinates(lat, lng, city[i][lat], city[i][lng])
-
-                }
-
+                    city[i].distance=distanceInKmBetweenEarthCoordinates(lat, lng, city[i].lat, city[i].lng);
+                    console.log(i + city[i]);
+                    city[i].save(function (err, city) {
+                        if (err) {
+                            sendJsonResponse(res, 404, err);
+                        } else {
+                            sendJsonResponse(res, 200, city[i]);
+                        }
+                    });
                 }
             }
 
             );
 
-
-    distance=distanceInKmBetweenEarthCoordinates(lat, lng, 17.8, 78.5);
-    console.log(distance);
-
-    cityM.geoNear(point, geoOptions, function (err, results, stats) {
+    cityM.geoNear(point, geoOptions, function (err,results , stats) {
         console.log(results);
         var cities = [];
         if(err){
