@@ -9,12 +9,11 @@ var passport = require('passport');
 var uglifyJs = require("uglify-js");
 var fs = require('fs');
 var busboyBodyParser = require('busboy-body-parser');
-
+var cors = require('cors');
 require('./app_api/models/db');
 require('./app_api/config/passport');
 
 var routesApi = require('./app_api/routes/index');
-
 
 
 var app = express();
@@ -25,6 +24,7 @@ var app = express();
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -50,6 +50,13 @@ app.use(function(err, req, res, next) {
   console.log(err);
   err.status = 404;
   next(err);
+});
+
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*'); //Will change to actual Internal network IP
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, PUT, DELETE, OPTIONS');
+  next();
 });
 
 // error handler

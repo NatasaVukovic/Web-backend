@@ -8,17 +8,19 @@ var sendJSONresponse = function (res, status, content) {
 };
 
 module.exports.register = function (req, res) {
-    if(!req.body.name && !req.body.email && !req.body.password){
+    console.log("Uslo123");
+    console.log(req.body.username);
+    if(!req.body.username && !req.body.email && !req.body.password){
         sendJSONresponse(res, 500, {"message": "All fields required!"});
         return;
     }
-    if(!req.body.name){
-        sendJSONresponse(res, 500, {"message": "Username is required!"});
+    if(!req.body.username){
+        sendJSONresponse(res, 500, {"message": "username is required!"});
         return;
-    } else if (req.body.name.length < 4 || req.body.name.length > 15) {
-        sendJSONresponse(res, 500, {"message": "Username must have between 4 and 15 characters!"});
-    } else if (req.body.name.indexOf(" ") !== -1){
-        sendJSONresponse(res, 500, {"message" : "Username can not contain space!"});
+    } else if (req.body.username.length < 4 || req.body.username.length > 15) {
+        sendJSONresponse(res, 500, {"message": "username must have between 4 and 15 characters!"});
+    } else if (req.body.username.indexOf(" ") !== -1){
+        sendJSONresponse(res, 500, {"message" : "username can not contain space!"});
     }
     if(!req.body.email){
         sendJSONresponse(res, 500, {"message": "Email is required!"});
@@ -36,7 +38,9 @@ module.exports.register = function (req, res) {
         sendJSONresponse(res, 500, {"message" : "Wrong email!"});
     }
     
+    console.log("Proslo provjere");
     User.findOne({'email': req.body.email}, function (err, user) {
+        console.log("Uslo u findone");
         if (err){
             sendJSONresponse(res, 400, err);
             return;
@@ -45,12 +49,12 @@ module.exports.register = function (req, res) {
             return;
         }
     }); 
-                   
+                  
     var user = new User();
-    user.name = req.body.name;
+    user.name = req.body.username;
     user.email = req.body.email;
     user.admin =  req.body.admin;
-
+    console.log("User napravljen");
     user.setPassword(req.body.password);
     user.save(function (err) {
         var token;
@@ -65,17 +69,18 @@ module.exports.register = function (req, res) {
 };
 
 module.exports.login = function (req, res) {
-    if(!req.body.name && !req.body.password){
+    console.log("Uslo u login");
+    if(!req.body.username && !req.body.password){
         sendJSONresponse(res, 500, {"message": "All fields required!"});
         return;
     }
-    if(!req.body.name){
-        sendJSONresponse(res, 500, {"message": "Username is required!"});
+    if(!req.body.username){
+        sendJSONresponse(res, 500, {"message": "username is required!"});
         return;
-    } else if (req.body.name.length < 4 || req.body.name.length > 15) {
-        sendJSONresponse(res, 500, {"message": "Username must have between 4 and 15 characters!"});
-    } else if (req.body.name.indexOf(" ") !== -1){
-        sendJSONresponse(res, 500, {"message" : "Username can not contain space!"});
+    } else if (req.body.username.length < 4 || req.body.username.length > 15) {
+        sendJSONresponse(res, 500, {"message": "username must have between 4 and 15 characters!"});
+    } else if (req.body.username.indexOf(" ") !== -1){
+        sendJSONresponse(res, 500, {"message" : "username can not contain space!"});
     }
     if(!req.body.password){
         sendJSONresponse(res, 500, {"message": "Password is required!"});
@@ -83,11 +88,11 @@ module.exports.login = function (req, res) {
     } else if (req.body.password.length < 6 || req.body.password.length > 20){
         sendJSONresponse(res, 500, {"message" : "Password must hawe between 6 and 20 characters."});
     }
-
+        console.log("Proslo provjere");
 
         passport.authenticate('local', function (err, user, info) {
             var token;
-
+            console.log("Passport proslo hehe");
             if (err) {
                 sendJSONresponse(res, 404, err);
                 console.log(err);
