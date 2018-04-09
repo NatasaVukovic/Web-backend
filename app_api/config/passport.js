@@ -17,16 +17,21 @@ passport.deserializeUser(function(id, done) {
 });*/
 
 passport.use(new LocalStrategy({usernameField: 'name', passwordField : 'password',}, function (name, password, done) {
-        User.findOne({'name': name}, function (err, user) {
+    console.log("Passssport prvo")   
+    User.findOne({'name': name}, function (err, user) {
+        console.log("Passport pronasao");
             if(err) {
                 return done(err);
             }
             if(!user){
-                return done(null, false, {message: 'Incorrect email'});
+                console.log("Incorect username")
+                return done(null, false, {message: 'Incorrect username'});
             }
             if(!user.validPassword(password)){
+                console.log('Passport: password invalid');
                 return done(null, false,{message: 'Incorrect password'});
             }
+            console.log('Passport:' + user);
             return done(null, user);
         })
     }

@@ -16,7 +16,7 @@ module.exports.use = function(req, res,next){
                 error: err
             });
         }
-        console.log('heeeeeeeeeee');
+        console.log('Authenticate');
         next();
     });
 
@@ -126,7 +126,15 @@ module.exports.citiesListByDistance=function(req,res){
 
 module.exports.citiesCreate=function(req,res){
     var decoded = jwt.decode(req.query.token);
-    console.log(decoded.admin);
+    if(!req.body.name){
+        sendJSONresponse(res, 500, {"message": "Name is required!"});
+        console.log("Name Required");
+        return;
+    } else if (req.body.name.length < 1 || req.body.name.length > 70) {
+        sendJSONresponse(res, 500, {"message": "Name must have between 1 and 70 characters!"});
+        console.log("Name length");
+    }
+    console.log('Admin: ' +decoded.admin);
     if(decoded.admin){
         cityM.create({
             _id: new mongoose.Types.ObjectId,

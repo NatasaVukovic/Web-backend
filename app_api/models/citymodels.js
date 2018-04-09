@@ -7,6 +7,7 @@ var reviewSchema=new mongoose.Schema({
     rating: {type: Number, 'default': 0, min:0, max:5, required: true},
     reviewText: {type : String, required: true},
     createdOn: {type: Date, 'default': Date.now}
+   
 });
 
 var placesSchema=new mongoose.Schema({
@@ -21,19 +22,17 @@ var placesSchema=new mongoose.Schema({
 
 var picturesSchema=new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    path: {type: String},
+    name: {type: String, required: true},
     createdOn: {type: Date, 'default': Date.now},
-    //author: {type : String, required: true}
-    description: {type: String}
-
+    author: {type : String, required: true}
 })
 
 var citySchema=new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   name: {type: String, required: true},
   country:{type: String, required: true},
-  lat: {type: String, required: true},
-  lng: {type: String, required: true},
+  lat: {type: Number, required: true},
+  lng: {type: Number, required: true},
   information: {type: String},
   places: [placesSchema],
   rating: {type: Number, "default": 0, min:0, max:5},

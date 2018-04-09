@@ -82,7 +82,7 @@ var doSetAverageRating=function (city) {
 
 
 module.exports.placesCreate=function(req,res){
-    getAuthor(req, res, function (req, res, user) {
+    /*getAuthor(req, res, function (req, res, user) {*/
         var cityid = req.params.cityid;
         if (cityid) {
             cityM
@@ -120,7 +120,7 @@ module.exports.placesCreate=function(req,res){
         } else {
             sendJsonResponse(res, 404, {'message': 'Not found, cityid required'});
         }
-    });
+    //});
 };
 
 module.exports.placesAll=function(req,res){

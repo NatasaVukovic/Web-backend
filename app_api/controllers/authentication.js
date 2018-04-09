@@ -8,33 +8,41 @@ var sendJSONresponse = function (res, status, content) {
 };
 
 module.exports.register = function (req, res) {
-    console.log("Uslo123");
-    console.log(req.body.username);
+    console.log("Register..");
+    console.log(req.body);
     if(!req.body.username && !req.body.email && !req.body.password){
         sendJSONresponse(res, 500, {"message": "All fields required!"});
+        console.log("Required");
         return;
     }
     if(!req.body.username){
         sendJSONresponse(res, 500, {"message": "username is required!"});
+        console.log("Username Required");
         return;
     } else if (req.body.username.length < 4 || req.body.username.length > 15) {
         sendJSONresponse(res, 500, {"message": "username must have between 4 and 15 characters!"});
+        console.log("Username length");
     } else if (req.body.username.indexOf(" ") !== -1){
         sendJSONresponse(res, 500, {"message" : "username can not contain space!"});
+        console.log("Username whitespace");
     }
     if(!req.body.email){
         sendJSONresponse(res, 500, {"message": "Email is required!"});
+        console.log("Email Required");
         return;
     }
     if(!req.body.password){
+        console.log("Password Required");
         sendJSONresponse(res, 500, {"message": "Password is required!"});
         return;
     } else if (req.body.password.length < 6 || req.body.password.length > 20){
+        console.log("Password length");
         sendJSONresponse(res, 500, {"message" : "Password must hawe between 6 and 20 characters."});
     }
 
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (req.body.email && !re.test(req.body.email)){
+        console.log("Email characters");
         sendJSONresponse(res, 500, {"message" : "Wrong email!"});
     }
     
@@ -90,22 +98,29 @@ module.exports.login = function (req, res) {
     }
         console.log("Proslo provjere");
 
-        passport.authenticate('local', function (err, user, info) {
-            var token;
-            console.log("Passport proslo hehe");
-            if (err) {
-                sendJSONresponse(res, 404, err);
-                console.log(err);
-                return;
-            }
-            if (user) {
-                token = user.generateJwt();
-                sendJSONresponse(res, 200, {"token": token});
-            } else {
-                sendJSONresponse(res, 401, info);
-            }
-        })(req, res);
-
+        User.findOne({'name': req.body.username}, function (err, user) {
+            if (err)
+                return res.status(500).json({
+                    message: 'Error while find that user.',
+                    obj: err
+                });
+            if (!user)
+                return res.status(500).json({
+                    message: 'Invalid login.'
+                });
+                if(user.validPassword(req.body.password)){
+                    token = user.generateJwt();
+                    res.status(200).send({
+                        'token': token,
+                        'username': user.name,
+                        'admin': user.admin
+                    });
+                    /*return sendJSONresponse(res, 200, {'token': token});*/
+                 
+                } else {
+                    return  sendJSONresponse(res, 401, {'message' : 'Invalid login!'});
+                } 
+        });
 };
 
 module.exports.logout = function (req, res) {

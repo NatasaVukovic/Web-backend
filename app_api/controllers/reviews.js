@@ -44,6 +44,7 @@ var getAuthor= function (req, res, callback) {
 
 var doAddReview = function (req, res, city, author) {
     if(!city){
+        console.log("u do add review")
         sendJsonResponse(res, 404, {'message': 'cityid not found'});
     } else {
         city.reviews.push({
@@ -109,12 +110,14 @@ module.exports.reviewsCreate=function(req,res){
                 .select('reviews')
                 .exec(function (err, city) {
                     if (err) {
+                        console.log("Error while finding a cityid")
                         sendJsonResponse(res, 404, err);
                     } else {
                         doAddReview(req, res, city, user.name);
                     }
                 });
         } else {
+            console.log("U city id not found");
             sendJsonResponse(res, 404, {'message': 'Not found, cityid required'});
         }
     });

@@ -1,14 +1,26 @@
-var express=require('express');
-var router=express.Router();
+let express=require('express');
+let router=express.Router();
 
-var ctrlCities=require('../controllers/cities');
-var ctrlReviews=require('../controllers/reviews');
-var ctrlPlaces=require('../controllers/places');
-var ctrlAuth=require('../controllers/authentication');
-//var ctrlUpload=require('../controllers/uploads');
-var ctrlPhoto=require('../controllers/photos');
-var ctrlUsers=require('../controllers/userControl');
+let ctrlCities=require('../controllers/cities');
+let ctrlReviews=require('../controllers/reviews');
+let ctrlPlaces=require('../controllers/places');
+let ctrlAuth=require('../controllers/authentication');
+//let ctrlUpload=require('../controllers/uploads');
+let ctrlPhoto=require('../controllers/photos');
+let ctrlUsers=require('../controllers/userControl');
+let multer  = require('multer');
+let path = require('path');
 
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, path.join(__dirname, './uploads/'))
+    },
+    filename: function (req, file, cb) {
+        console.log(file.name);
+      cb(null, file.filename + '-' + Date.now())
+    }
+  });
+  const multerUpload = multer({  dest: 'uploads/'});
 //cities
 router.get('/citiesDistance', ctrlCities.citiesListByDistance);
 router.get('/cities', ctrlCities.citiesListByRating);
