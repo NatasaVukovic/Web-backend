@@ -138,7 +138,7 @@ module.exports.photosList=function (req, res) {
 };
 
 module.exports.photoDelete=function (req, res) {
-    if (req.params && req.params.cityid && req.params.pictureid) {
+    if (req.params && req.params.cityid && req.params.photoid) {
         cityM
             .findById(req.params.cityid)
             .select('pictures')
@@ -152,7 +152,7 @@ module.exports.photoDelete=function (req, res) {
                     return;
                 }
                 if (city.pictures && city.pictures.length > 0) {
-                    if (!city.pictures.id(req.params.pictureid)) {
+                    if (!city.pictures.id(req.params.photoid)) {
                         sendJsonResponse(res, 404, {'message': 'Pictureid not found!'});
                     } else {
                         city.pictures.id(req.params.pictureid).remove();

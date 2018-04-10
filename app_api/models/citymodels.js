@@ -24,7 +24,9 @@ var picturesSchema=new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: {type: String, required: true},
     createdOn: {type: Date, 'default': Date.now},
-    author: {type : String, required: true}
+    author: {type : String, required: true},
+    description: {type: String},
+    path: {type: String, required: true}
 })
 
 var citySchema=new mongoose.Schema({

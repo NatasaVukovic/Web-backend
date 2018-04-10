@@ -63,10 +63,9 @@ router.get('/logout', ctrlAuth.logout);
 //pictures
 //router.use('/cities/:cityid/photo', ctrlPhoto.use);
 router.post('/cities/:cityid/photo', ctrlPhoto.uploadPhoto);
-router.post('/cities/:cityid/photoList', ctrlPhoto.uploadPhotoList);
-router.get('/cities/:cityid/pictures', ctrlPhoto.photosList);
-router.get('/cities/:cityid/pictures/:pictureid', ctrlPhoto.getPhoto);
-router.delete('/cities/:cityid/pictures/:pictureid', ctrlPhoto.photoDelete);
+router.get('/cities/:cityid/photo', ctrlPhoto.photosList);
+router.get('/cities/:cityid/photo/:photoid', ctrlPhoto.getPhoto);
+router.delete('/cities/:cityid/photo/:photoid', ctrlPhoto.photoDelete);
 
 //admin
 router.use('/users', ctrlUsers.use);

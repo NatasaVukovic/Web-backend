@@ -16,8 +16,7 @@ module.exports.use = function(req, res,next){
             });
         }
        //var decodedUser = jwt.decode(req.query.token);
-        console.log(decoded.admin);
-        console.log(decoded);
+     
         //console.log(decodedUser.admin);
         if(!decoded.admin){
             sendJSONresponse(res, 403, {'message' : 'Only admin can do this!'});
@@ -30,7 +29,7 @@ module.exports.use = function(req, res,next){
 module.exports.getUsers=function (req,res) {
     User
         .find({})
-        .select('name email')
+        .select('name email admin')
         .exec(function (err, user) {
             if(err){
                 sendJSONresponse(res, 400, err);
@@ -74,6 +73,7 @@ module.exports.deleteUser=function (req,res) {
 }
 
 module.exports.updateUser=function (req,res) {
+    console.log(req.params.userid);
     if(req.params && req.params.userid) {
         User
             .findById(req.params.userid)
@@ -85,7 +85,17 @@ module.exports.updateUser=function (req,res) {
                     sendJSONresponse(res, 400, {'message': 'User not found!'});
                 }
                 user.admin=req.body.admin;
-                sendJSONresponse(res, 200, user);
+                user.save(function (err, user) {
+                    if(err){
+                        console.log(err);
+                        sendJsonResponse(res, 400, err);
+                    } else if(!user){
+                       sendJsonResponse(res, 400, {"message" : "User not found!"});     
+                    } 
+                    sendJSONresponse(res, 200, {'message': 'Changed!'});
+
+                });
+             
 
             })
     }

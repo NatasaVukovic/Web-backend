@@ -3,7 +3,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var mongoose = require('mongoose');
 var User=mongoose.model('User');
-var secret=require('../../secret/secret');
+var auth=require('./auth');
 
 /*
 passport.serializeUser(function(user, done) {
@@ -37,7 +37,7 @@ passport.use(new LocalStrategy({usernameField: 'name', passwordField : 'password
     }
 ));
 
-passport.use(new FacebookStrategy(secret.facebook, function(accessToken, refreshToken, profile, done) {
+passport.use(new FacebookStrategy(auth.facebook, function(accessToken, refreshToken, profile, done) {
     User.findOne({facebookId: profile.id}, function (err, user) {
         if (err) {
             return done(err);

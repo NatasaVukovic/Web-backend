@@ -186,7 +186,7 @@ module.exports.citiesUpdateOne=function(req,res){
     if(req.params && req.params.cityid){
         cityM
             .findByIdAndUpdate(req.params.cityid)
-            .select('-reviews -rating -votes')
+            .select('-reviews -rating -places')
             .exec(function (err, city) {
                 if(!city){
                     sendJsonResponse(res, 404,{'message': 'cityid not found!'});

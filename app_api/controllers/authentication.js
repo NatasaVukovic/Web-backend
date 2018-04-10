@@ -113,7 +113,8 @@ module.exports.login = function (req, res) {
                     res.status(200).send({
                         'token': token,
                         'username': user.name,
-                        'admin': user.admin
+                        'admin': user.admin, 
+                        'mainAdmin': user.mainAdmin
                     });
                     /*return sendJSONresponse(res, 200, {'token': token});*/
                  
