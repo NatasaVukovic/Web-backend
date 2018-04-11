@@ -8,6 +8,19 @@ var jwt = require('jsonwebtoken');
 var user=mongoose.model('User');
 var async = require('async');
 
+module.exports.use = function(req, res,next){
+    jwt.verify(req.query.token, process.env.JWT_SECRET, function (err, decoded) {
+        if (err) {
+            return res.status(403).json({
+                title: 'Not Authenticated',
+                error: err
+            });
+        }
+        next();
+    });
+}
+
+
 var getAuthor= function (req, res, callback) {
     var decoded = jwt.decode(req.query.token);
     if (decoded.email){
@@ -40,7 +53,7 @@ var sendJsonResponse=function(res,status,content){
 
 module.exports.uploadPhoto= function (req, res) {
     console.log('uploaded ' + req.files.file.name);
-           
+
             getAuthor(req, res, function (req, res, user) {
             if(req.params && req.params.cityid){
                 cityM
@@ -62,7 +75,7 @@ module.exports.uploadPhoto= function (req, res) {
                           });*/
                           thisCity=req.params.cityid;
                         
-                          fs.writeFile(path.join(__dirname, './uploads/') + req.files.file.name, req.files.file.data, (err, data) => {
+                          fs.writeFile(path.join(__dirname, './../../public/uploads/') + req.files.file.name, req.files.file.data, (err, data) => {
                             if (err) {
                                 sendJsonResponse(res, 400, err);
                                 console.log('Error in writeFile');
@@ -71,7 +84,7 @@ module.exports.uploadPhoto= function (req, res) {
                         _id: new mongoose.Types.ObjectId,
                         name: req.files.file.name,
                         author: user.name,
-                        path: path.join(__dirname, './uploads/') + req.files.file.name
+                        path: 'http://localhost:3000\\public\\uploads\\' + req.files.file.name
                         //description: req.body.description
                     });
                     city.save(function (err, city) {
@@ -122,7 +135,7 @@ module.exports.photosList=function (req,res){
                     picture=city.pictures[i];
                     pictureId=picture._id;
                     pictureName=picture.name;
-                    arrayOfPictures[i] = path.join(__dirname, './uploads/') + pictureName;
+                    arrayOfPictures[i] = 'public/uploads/' + pictureName;
                     arrayOfId[i]=pictureId;
                 }
 
@@ -184,7 +197,7 @@ module.exports.getPhoto=function(req,res){
                         sendJsonResponse(res, 404, {'message': 'Pictureid not found!'});
                     } else {
                         thisPictureName=picture.name;
-                        fs.readFile(path.join(__dirname, './uploads/') + thisPictureName, (err, data) => {
+                        fs.readFile(path.join(__dirname, './../../public/uploads/') + thisPictureName, (err, data) => {
                             if (err) return sendJsonResponse(res, 400, err);
                             else {
                         response = {

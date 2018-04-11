@@ -61,7 +61,7 @@ router.get('/logout', ctrlAuth.logout);
 
 
 //pictures
-//router.use('/cities/:cityid/photo', ctrlPhoto.use);
+router.use('/cities/:cityid/photo', ctrlPhoto.use);
 router.post('/cities/:cityid/photo', ctrlPhoto.uploadPhoto);
 router.get('/cities/:cityid/photo', ctrlPhoto.photosList);
 router.get('/cities/:cityid/photo/:photoid', ctrlPhoto.getPhoto);
