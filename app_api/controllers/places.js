@@ -23,19 +23,19 @@ module.exports.use = function(req, res,next){
 var getAuthor= function (req, res, callback) {
     var decoded = jwt.decode(req.query.token);
     if (decoded.email){
-        user
-            .findOne({email : decoded.email})
-            .exec(function (err, user) {
-                if(!user){
-                    sendJsonResponse(res, 404, {"message" : "User not found!"});
-                    return;
-                } else if(err){
-                    sendJsonResponse(res, 404, err);
-                    return;
-                }
-                callback(req, res, user);
+      user
+          .findOne({email : decoded.email})
+          .exec(function (err, user) {
+              if(!user){
+                  sendJsonResponse(res, 404, {"message" : "User not found!"});
+                  return;
+              } else if(err){
+                  sendJsonResponse(res, 404, err);
+                  return;
+              }
+              callback(req, res, user);
 
-            })
+          })
     }  else {
         sendJsonResponse(res, 404, { "message" : "Email not found!"});
         return;
@@ -82,7 +82,8 @@ var doSetAverageRating=function (city) {
 
 
 module.exports.placesCreate=function(req,res){
-    /*getAuthor(req, res, function (req, res, user) {*/
+    getAuthor(req, res, function (req, res, user) {
+        
         var cityid = req.params.cityid;
         if (cityid) {
             cityM
@@ -95,6 +96,8 @@ module.exports.placesCreate=function(req,res){
                         if(!city){
                             sendJsonResponse(res, 404, {'message': 'cityid not found'});
                         } else {
+                            console.log(user.username);
+        console.log(author);
                             city.places.push({
                                 _id: new mongoose.Types.ObjectId,
                                 place:req.body.place,
@@ -119,7 +122,7 @@ module.exports.placesCreate=function(req,res){
         } else {
             sendJsonResponse(res, 404, {'message': 'Not found, cityid required'});
         }
-    //});
+    }
 };
 
 module.exports.placesAll=function(req,res){

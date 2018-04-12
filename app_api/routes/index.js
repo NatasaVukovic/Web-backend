@@ -47,11 +47,8 @@ router.get('/cities/:cityid/reviews', ctrlReviews.reviewsReadAll);
 router.get('/cities/:cityid/reviews/:reviewid',  ctrlReviews.reviewsReadOne);
 router.put('/cities/:cityid/reviews/:reviewid',   ctrlReviews.reviewsUpdateOne);
 router.delete('/cities/:cityid/reviews/:reviewid',  ctrlReviews.reviewsDeleteOne);
-/*
-//upload
-router.get('/cities/:cityid/upload/:filename', ctrlUpload.getFile);
-router.post('/cities/:cityid/upload', ctrlUpload.createFile);
-router.get('/cities/cityid/upload', ctrlUpload.listOfUploads);*/
+
+
 
 
 //authentication

@@ -68,11 +68,15 @@ module.exports.uploadPhoto= function (req, res) {
                             sendJsonResponse(res, 404, err);
                             console.log("Error in find city");
                             return;
-                        }/*
-                        fs.rename('/app_api/controllers/uploads/' + req.files.file.name,'/app_api/controllers/uploads/'+ city.name + '-' + city.pictures.length, function (err) {
-                            if (err) throw err;
-                            console.log('renamed complete');
-                          });*/
+                        }
+
+                        var extension = req.file.filename.substring(
+                            FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
+        
+        //The file uploaded is an image
+        
+        if (extension == "gif" || extension == "png" || extension == "bmp"
+                            || extension == "jpeg" || extension == "jpg") {
                           thisCity=req.params.cityid;
                         
                           fs.writeFile(path.join(__dirname, './../../public/uploads/') + req.files.file.name, req.files.file.data, (err, data) => {
@@ -98,7 +102,11 @@ module.exports.uploadPhoto= function (req, res) {
                         }
                     });
                     })
+                } else {
+                    sendJsonResponse(res, 400, {'message': 'This file is not a image!'});
+                }
                 });
+            
                 }
                 else {
                     sendJsonResponse(res, 404, {"message": "Cityid not found"});
