@@ -13,8 +13,6 @@ var reviewSchema=new mongoose.Schema({
 var placesSchema=new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     place: {type: String, required: true},
-    lat: {type: String},
-    lng: {type: String},
     likes : {type: Number, default: 0},
     author: {type: String, required: true},
     description: {type: String}

@@ -98,14 +98,13 @@ module.exports.placesCreate=function(req,res){
                             city.places.push({
                                 _id: new mongoose.Types.ObjectId,
                                 place:req.body.place,
-                                author: user.name,
-                                lat:req.body.lat,
-                                lng:req.body.lng,
-                                description: req.body.description
+                                author: user.name
                             });
                             city.save(function (err, city) {
                                 var thisPlace;
                                 if (err) {
+                                    console.log("Greska u save");
+                                    console.log(err);
                                     sendJsonResponse(res, 400, err);
                                 } else {
                                     thisPlace = city.places[city.places.length - 1];

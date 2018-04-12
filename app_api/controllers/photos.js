@@ -140,13 +140,7 @@ module.exports.photosList=function (req,res){
                 }
 
                 console.log(arrayOfPictures);
-/*
-                async.map(arrayOfPictures, fs.readFile, function (err, data) {
-                    for(var i = 0, l = data.length ; i < l ; i++) {
-                        console.log( data[i] );
-                    }
-                });
-*/
+
 
 async.eachSeries(
     // Pass items to iterate over
@@ -243,8 +237,10 @@ module.exports.photoDelete = function (req,res) {
                             return;
                         }
                         thisPictureName=thisPicture.name;
-                        fs.unlink(path.join(__dirname, './uploads/') + thisPictureName, (err, data) => {
-                            if (err) return sendJsonResponse(res, 400, err);
+                        fs.unlink(path.join(__dirname, './../../public/uploads/') + thisPictureName, (err, data) => {
+                            if (err) {
+                                console.log("Greska u unlink");
+                                return sendJsonResponse(res, 400, err);}
                             else {
                                 thisPicture.remove();
                         city.save(function (err) {
