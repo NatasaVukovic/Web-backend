@@ -42,45 +42,6 @@ var getAuthor= function (req, res, callback) {
     }
 }
 
-var doAddPlace = function (req, res, city, author) {
-
-}
-
-var updateAverageRating = function (cityid) {
-    cityM
-        .findById(cityid)
-        .select('rating reviews')
-        .exec(function (err, city) {
-            if(!err) {
-                doSetAverageRating(city);
-            } else {
-                console.log(err);
-            }
-        });
-}
-
-var doSetAverageRating=function (city) {
-    var i, reviewCount, ratingAverage, ratingTotal;
-    if(city.reviews && city.reviews.length>0){
-        reviewCount = city.reviews.length;
-        ratingTotal = 0;
-        for(i=0; i<reviewCount; i++){
-            ratingTotal = ratingTotal + city.reviews[i].rating;
-        }
-        ratingAverage = parseInt(ratingTotal/reviewCount,10);
-        city.rating=ratingAverage;
-        city.save(function (err) {
-            if(err){
-                console.log(err);
-            } else {
-                console.log('Average rating update to ',ratingAverage );
-            }
-
-        })
-    }
-};
-
-
 module.exports.placesCreate=function(req,res){
     getAuthor(req, res, function (req, res, user) {
         
@@ -96,8 +57,6 @@ module.exports.placesCreate=function(req,res){
                         if(!city){
                             sendJsonResponse(res, 404, {'message': 'cityid not found'});
                         } else {
-                            console.log(user.username);
-        console.log(author);
                             city.places.push({
                                 _id: new mongoose.Types.ObjectId,
                                 place:req.body.place,
@@ -122,7 +81,7 @@ module.exports.placesCreate=function(req,res){
         } else {
             sendJsonResponse(res, 404, {'message': 'Not found, cityid required'});
         }
-    }
+    })
 };
 
 module.exports.placesAll=function(req,res){
@@ -210,10 +169,8 @@ module.exports.placesUpdateOne=function(req,res){
                                 sendJsonResponse(res, 500, {"message" : "You are not authorised to update this place"});
                                 return;
                             }
-                            //thisPlace.place=req.body.place,
-                            thisPlace.lng=req.body.lng,
-                            thisPlace.lat=req.body.lat,
-                            thisPlace.description=req.body.description
+                            thisPlace.place=req.body.place,
+                           
                             city.save(function (err, city) {
                                 if (err) {
                                     sendJsonResponse(res, 404, err);

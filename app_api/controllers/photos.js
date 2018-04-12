@@ -70,7 +70,7 @@ module.exports.uploadPhoto= function (req, res) {
                             return;
                         }
 
-                        var extension = req.file.filename.substring(
+                       /* var extension = req.files.file.filename.substring(
                             FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
         
         //The file uploaded is an image
@@ -78,7 +78,7 @@ module.exports.uploadPhoto= function (req, res) {
         if (extension == "gif" || extension == "png" || extension == "bmp"
                             || extension == "jpeg" || extension == "jpg") {
                           thisCity=req.params.cityid;
-                        
+                        */
                           fs.writeFile(path.join(__dirname, './../../public/uploads/') + req.files.file.name, req.files.file.data, (err, data) => {
                             if (err) {
                                 sendJsonResponse(res, 400, err);
@@ -102,10 +102,10 @@ module.exports.uploadPhoto= function (req, res) {
                         }
                     });
                     })
-                } else {
+                    }/* else {
                     sendJsonResponse(res, 400, {'message': 'This file is not a image!'});
-                }
-                });
+                }*/
+                );
             
                 }
                 else {

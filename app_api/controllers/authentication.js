@@ -61,7 +61,6 @@ module.exports.register = function (req, res) {
     var user = new User();
     user.name = req.body.username;
     user.email = req.body.email;
-    user.admin =  req.body.admin;
     console.log("User napravljen");
     user.setPassword(req.body.password);
     user.save(function (err) {

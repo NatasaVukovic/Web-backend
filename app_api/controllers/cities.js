@@ -134,6 +134,10 @@ module.exports.citiesCreate=function(req,res){
         sendJSONresponse(res, 500, {"message": "Name must have between 1 and 70 characters!"});
         console.log("Name length");
     }
+
+    if(req.body.information.length>3000){
+        sendJSONresponse(res, 500, {"message": "Information of city must be less then 3000 characters"});
+    }
     console.log('Admin: ' +decoded.admin);
     if(decoded.admin){
         cityM.create({
