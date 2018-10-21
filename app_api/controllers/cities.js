@@ -16,6 +16,7 @@ module.exports.use = function(req, res,next){
                 error: err
             });
         }
+        console.log(req.query.token);
         console.log('Authenticate');
         next();
     });
@@ -125,6 +126,7 @@ module.exports.citiesListByDistance=function(req,res){
 
 
 module.exports.citiesCreate=function(req,res){
+    console.log("Toooooken u create:" +req.query.token);
     var decoded = jwt.decode(req.query.token);
     if(!req.body.name){
         sendJSONresponse(res, 500, {"message": "Name is required!"});
@@ -140,6 +142,7 @@ module.exports.citiesCreate=function(req,res){
     }
     console.log('Admin: ' +decoded.admin);
     if(decoded.admin){
+    
         cityM.create({
             _id: new mongoose.Types.ObjectId,
             name: req.body.name,

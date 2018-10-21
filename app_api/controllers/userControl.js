@@ -10,14 +10,15 @@ var sendJSONresponse = function (res, status, content) {
 module.exports.use = function(req, res,next){
     jwt.verify(req.query.token, process.env.JWT_SECRET, function (err, decoded) {
         if (err) {
+
             return res.status(403).json({
                 title: 'Not Authenticated',
                 error: err
             });
         }
-       //var decodedUser = jwt.decode(req.query.token);
+       var decodedUser = jwt.decode(req.query.token);
      
-        //console.log(decodedUser.admin);
+        console.log(decodedUser);
         if(!decoded.admin){
             sendJSONresponse(res, 403, {'message' : 'Only admin can do this!'});
             return;

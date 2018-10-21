@@ -44,7 +44,6 @@ var getAuthor= function (req, res, callback) {
 
 var doAddReview = function (req, res, city, author) {
     if(!city){
-        console.log("u do add review")
         sendJsonResponse(res, 404, {'message': 'cityid not found'});
     } else {
         city.reviews.push({

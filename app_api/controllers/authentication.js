@@ -46,10 +46,10 @@ module.exports.register = function (req, res) {
         sendJSONresponse(res, 500, {"message" : "Wrong email!"});
     }
     
-    console.log("Proslo provjere");
     User.findOne({'email': req.body.email}, function (err, user) {
-        console.log("Uslo u findone");
+    
         if (err){
+            
             sendJSONresponse(res, 400, err);
             return;
         } else if(user){
@@ -63,6 +63,7 @@ module.exports.register = function (req, res) {
     user.email = req.body.email;
     console.log("User napravljen");
     user.setPassword(req.body.password);
+
     user.save(function (err) {
         var token;
         if(err){

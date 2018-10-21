@@ -92,6 +92,7 @@ module.exports.uploadPhoto= function (req, res) {
                         //description: req.body.description
                     });
                     city.save(function (err, city) {
+                      
                         var thisPicture;
                         if (err) {
                             sendJsonResponse(res, 404, err);

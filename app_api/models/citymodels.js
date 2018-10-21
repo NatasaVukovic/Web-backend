@@ -7,6 +7,7 @@ var reviewSchema=new mongoose.Schema({
     rating: {type: Number, 'default': 0, min:0, max:5, required: true},
     reviewText: {type : String, required: true},
     createdOn: {type: Date, 'default': Date.now}
+
    
 });
 
@@ -16,6 +17,7 @@ var placesSchema=new mongoose.Schema({
     likes : {type: Number, default: 0},
     author: {type: String, required: true},
     description: {type: String}
+   
 });
 
 var picturesSchema=new mongoose.Schema({
@@ -25,6 +27,7 @@ var picturesSchema=new mongoose.Schema({
     author: {type : String, required: true},
     description: {type: String},
     path: {type: String, required: true}
+
 })
 
 var citySchema=new mongoose.Schema({
@@ -37,9 +40,10 @@ var citySchema=new mongoose.Schema({
   places: [placesSchema],
   rating: {type: Number, "default": 0, min:0, max:5},
   reviews: [reviewSchema],
-  pictures: [picturesSchema],
+  pictures: [picturesSchema, ],
     distance: {type: Number, default:0}
-});
+    
+},  { usePushEach: true });
 
 mongoose.model('City', citySchema);
 //mongoose.model('Place', placesSchema);
